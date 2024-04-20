@@ -31,4 +31,29 @@ router.post("/register", async (req, res) => {
   }
   //res.send("User Added");
 });
+//LOGIN
+router.post("login", async(req,res)=>{
+
+  try {
+  const user = await User.findOne({email:req.body.email});
+  
+  !user &&res.status(404).json("user not found");
+  
+  const valid_pass= await bcrypt.compare(req.body.password, user . password);
+  
+  !valid_pass && res.status (400). json("wrong password");
+  
+  const token = createToken(user.id);
+
+    const cookie = res.cookie("jwt", token, {
+    httpOnly: true,
+    maxAge: maxAge * 1000,
+    });
+      
+  res.status(200). json(user);
+  }
+  catch(err){
+  console.log(err);
+  }
+});
 module.exports = router;
