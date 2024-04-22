@@ -24,10 +24,11 @@ router.post("/register", async (req, res) => {
       httpOnly: true,
       maxAge: maxAge * 1000,
     });
-    res.status(200).json({ userID: newUser._id });
+    res.status(200).json({ success: "True", userID: newUser._id });
     //console.log(cookie);
   } catch (err) {
-    console.log(err);
+    res.status(404).json({ success: "False", userID: "" });
+    console.log("User Already Exists");
   }
   //res.send("User Added");
 });
