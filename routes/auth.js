@@ -41,7 +41,10 @@ router.post("/login", async (req, res) => {
 
     const valid_pass = await bcrypt.compare(req.body.password, user.password);
 
-    !valid_pass && res.status(400).json("wrong password");
+    !valid_pass &&
+      res
+        .status(400)
+        .json({ success: "False", message: "incorrect email or password" });
 
     const token = createToken(user.id);
 
@@ -50,7 +53,7 @@ router.post("/login", async (req, res) => {
       maxAge: maxAge * 1000,
     });
 
-    res.status(200).json(user);
+    res.status(200).json({ success: "true", userID: user._id });
   } catch (err) {
     console.log(err);
   }
