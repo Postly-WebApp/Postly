@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({ id }, "SECRET", {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: maxAge,
   });
 };
@@ -28,7 +28,7 @@ router.post("/register", async (req, res) => {
     //console.log(cookie);
   } catch (err) {
     res.status(404).json({ success: "False", userID: "" });
-    console.log("User Already Exists");
+    console.log(err);
   }
   //res.send("User Added");
 });
