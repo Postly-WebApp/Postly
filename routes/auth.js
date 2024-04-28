@@ -5,13 +5,14 @@ const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const registerSchema = require("../validations/register");
 const loginSchema = require("../validations/login");
-
+//const checkToken = require("./middlewares/checkTokens");
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: maxAge,
   });
 };
+
 router.post("/register", async (req, res) => {
   const data = req.body;
   console.log(data);
@@ -46,12 +47,12 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
-    !user && res.status(404).json("user not found");
+    if (!user) return res.status(404).json("user not found");
 
     const valid_pass = await bcrypt.compare(req.body.password, user.password);
 
-    !valid_pass &&
-      res
+    if (!valid_pass)
+      return res
         .status(400)
         .json({ success: "False", message: "incorrect email or password" });
 
@@ -67,4 +68,28 @@ router.post("/login", async (req, res) => {
     console.log(err);
   }
 });
+
+// route to know if the user sending the request is authenticated according to the id field in the jwt sent in the cookie
+router.get("/verify", async (req, res) => {
+  const token = req.cookies.jwt;
+  // const actualToken = req.headers.cookie.split("=")[1];
+  // actualToken = actualToken.split(";")[0];
+  // //console.log(actualToken.split(";")[0]);
+  if (!token) {
+    return res.status(401).json({ success: "False", userID: "" });
+  }
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    res.status(200).json({ success: "True", userID: verified.id });
+  } catch (err) {
+    res.status(401).json({ success: "False", userID: "" });
+  }
+});
+
+// route to logout the user
+router.get("/logout", (req, res) => {
+  res.clearCookie("jwt");
+  res.status(200).json({ success: "true" });
+});
+
 module.exports = router;

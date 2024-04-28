@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const dotenv = require("dotenv");
@@ -12,7 +13,9 @@ const handler = require("./middlewares/errorHandler");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const authRoute = require("./routes/auth");
+const checkToken = require("./middlewares/checkTokens");
 // middlewares
+
 app.use(express.json());
 //app.use(handler());
 app.use(helmet());
@@ -23,7 +26,9 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+app.use(cookieParser());
 app.use(morgan("common"));
+// app.use(checkToken());
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/auth", authRoute);
