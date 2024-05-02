@@ -13,6 +13,13 @@ const createToken = (id) => {
   });
 };
 
+const adminToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: maxAge,
+  });
+};
+
+//REGISTER
 router.post("/register", async (req, res) => {
   const data = req.body;
   console.log(data);
@@ -44,6 +51,19 @@ router.post("/login", async (req, res) => {
   const data = req.body;
   const { error } = loginSchema.validate(data);
   if (error) return res.status(400).json({ message: error.details[0].message });
+
+  if (
+    req.body.email === "admin@Postly.com" &&
+    req.body.password === "rootroot"
+  ) {
+    // const token = adminToken(user.id);
+    // const cookie = res.cookie("jwt", token, {
+    //   httpOnly: true,
+    //   maxAge: maxAge * 1000,
+    // });
+    // Send a success response indicating admin login
+    return res.status(200).json({ success: true, isAdmin: true });
+  }
   try {
     const user = await User.findOne({ email: req.body.email });
 
