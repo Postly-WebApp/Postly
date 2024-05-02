@@ -13,7 +13,7 @@ const handler = require("./middlewares/errorHandler");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const authRoute = require("./routes/auth");
-const checkToken = require("./middlewares/checkTokens");
+//const checkToken = require("./middlewares/checkTokens");
 // middlewares
 
 app.use(express.json());
