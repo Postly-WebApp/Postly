@@ -3,17 +3,20 @@ const mongoose = require("mongoose");
 const postSchema = new mongoose.Schema(
   {
     userID: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     desc: {
       type: String,
       max: 500,
     },
-    comments: {
-      type: Array,
-      default: [],
-    },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
     img: {
       type: String,
     },

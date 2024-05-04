@@ -56,11 +56,6 @@ router.post("/login", async (req, res) => {
     req.body.email === "admin@Postly.com" &&
     req.body.password === "rootroot"
   ) {
-    // const token = adminToken(user.id);
-    // const cookie = res.cookie("jwt", token, {
-    //   httpOnly: true,
-    //   maxAge: maxAge * 1000,
-    // });
     // Send a success response indicating admin login
     return res.status(200).json({ success: true, isAdmin: true });
   }

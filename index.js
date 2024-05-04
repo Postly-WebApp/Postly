@@ -13,6 +13,8 @@ const handler = require("./middlewares/errorHandler");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const authRoute = require("./routes/auth");
+const commentRoute = require("./routes/comments");
+
 //const checkToken = require("./middlewares/checkTokens");
 // middlewares
 
@@ -32,3 +34,4 @@ app.use(morgan("common"));
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/comments", commentRoute);
