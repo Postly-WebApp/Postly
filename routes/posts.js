@@ -56,6 +56,9 @@ router.delete("/:id", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
+    if (!posts) {
+      return res.status(404).json({ message: "No posts found" });
+    }
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);

@@ -11,12 +11,6 @@ const postSchema = new mongoose.Schema(
       type: String,
       max: 500,
     },
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
     img: {
       type: String,
     },
