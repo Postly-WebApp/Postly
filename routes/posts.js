@@ -87,4 +87,15 @@ router.get("/user/:id", async (req, res) => {
 module.exports = router;
 /*
   -------------------------------------      Reviewed and Done (FOR NOW)       -------------------------------------
+  # DOCs
+    -> create a new post
+        => DONE
+    -> update a specific post
+        => DONE
+    -> delete a specific post
+        => DONE
+    -> get all posts
+        => DONE
+    -> get all posts of a specific user
+        => DONE
 */
