@@ -75,6 +75,9 @@ router.get("/", async (req, res) => {
 router.get("/user/:id", async (req, res) => {
   try {
     const posts = await Post.find({ userID: req.params.id });
+    if (!posts) {
+      return res.status(404).json({ message: "No posts found" });
+    }
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ message: "something went wrong" });
