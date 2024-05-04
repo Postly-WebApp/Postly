@@ -6,9 +6,13 @@ router.post("/", async (req, res) => {
   const newPost = new Post(req.body);
   try {
     const savePost = await newPost.save();
-    res.status(200).json(savePost);
+    res.status(200).json({
+      success: true,
+      message: "Post created successfully",
+      postID: savePost._id,
+    });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
@@ -16,19 +20,21 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const post = await Post.findById(req.params.id);
   try {
-    if (req.body.userID === post.userID) {
+    if (req.body.userID === post.userID.toString()) {
       await post.updateOne({ $set: req.body });
       res
         .status(200)
         .json({ success: "true", message: "Updated successfully" });
     } else {
+      console.log(req.body.userID);
+      console.log(post.userID);
       res.status(403).json({
         success: "false",
         message: "you can only update your own posts",
       });
     }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
@@ -36,7 +42,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const post = await Post.findById(req.params.id);
   try {
-    if (req.body.userID === post.userID) {
+    if (req.body.userID === post.userID.toString()) {
       await post.deleteOne();
       res
         .status(200)
@@ -48,7 +54,7 @@ router.delete("/:id", async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
@@ -61,7 +67,7 @@ router.get("/", async (req, res) => {
     }
     res.status(200).json(posts);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
@@ -71,8 +77,11 @@ router.get("/user/:id", async (req, res) => {
     const posts = await Post.find({ userID: req.params.id });
     res.status(200).json(posts);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
 module.exports = router;
+/*
+  -------------------------------------      Reviewed and Done (FOR NOW)       -------------------------------------
+*/
