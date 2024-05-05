@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/User");
-
+const bcrypt = require("bcrypt");
 // route to get all users  (ADMIN FUNCTIONALITY ONLY)
 router.get("/", async (req, res) => {
   try {
@@ -46,7 +46,11 @@ router.get("/:id", async (req, res) => {
 router.put("/email/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (user.userID.toString() === req.body.userID) {
+    // console.log(user._id);
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    // console.log(user.userID.toString());
+    // console.log(req.params.id);
+    if (user._id.toString() === req.params.id) {
       // Check if the new email already exists
       const existingUser = await User.findOne({ email: req.body.email });
       if (existingUser) {
@@ -58,15 +62,14 @@ router.put("/email/:id", async (req, res) => {
         .status(200)
         .json({ success: true, message: "Email updated successfully" });
     } else {
-      res
-        .status(403)
-        .json({
-          success: false,
-          message: "You can only update your own profile",
-        });
+      res.status(403).json({
+        success: false,
+        message: "You can only update your own profile",
+      });
     }
   } catch (err) {
-    res.status(500).json({ message: "This User Does Not Exist" });
+    console.log(err.message);
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
@@ -74,7 +77,8 @@ router.put("/email/:id", async (req, res) => {
 router.put("/username/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (user.userID.toString() === req.body.userID) {
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    if (user._id.toString() === req.params.id) {
       // Check if the new username already exists
       const existingUser = await User.findOne({ username: req.body.username });
       if (existingUser) {
@@ -86,15 +90,14 @@ router.put("/username/:id", async (req, res) => {
         .status(200)
         .json({ success: true, message: "Username updated successfully" });
     } else {
-      res
-        .status(403)
-        .json({
-          success: false,
-          message: "You can only update your own profile",
-        });
+      res.status(403).json({
+        success: false,
+        message: "You can only update your own profile",
+      });
     }
   } catch (err) {
-    res.status(500).json({ message: "This User Does Not Exist" });
+    console.log(err.message);
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
@@ -102,22 +105,23 @@ router.put("/username/:id", async (req, res) => {
 router.put("/password/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (user.userID.toString() === req.body.userID) {
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    if (user._id.toString() === req.params.id) {
       // Update the password
-      await user.updateOne({ $set: { password: req.body.password } });
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      await user.updateOne({ $set: { password: hashedPassword } });
       res
         .status(200)
         .json({ success: true, message: "Password updated successfully" });
     } else {
-      res
-        .status(403)
-        .json({
-          success: false,
-          message: "You can only update your own profile",
-        });
+      res.status(403).json({
+        success: false,
+        message: "You can only update your own profile",
+      });
     }
   } catch (err) {
-    res.status(500).json({ message: "This User Does Not Exist" });
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
@@ -125,7 +129,8 @@ router.put("/password/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (user.userID === req.body.userID) {
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    if (user._id.toString() === req.params.id) {
       await user.deleteOne();
       res
         .status(200)
@@ -137,7 +142,8 @@ router.delete("/:id", async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).json({ message: "this User Does Not Exist" });
+    console.log(err.message);
+    res.status(500).json({ message: "something went wrong" });
   }
 });
 
@@ -148,14 +154,22 @@ module.exports = router;
     -> create a new user
         => reviewd
         => DONE
-    -> update username
-    -> update email
-    -> update password
-    -> delete a specific user
     -> get all users
         => reviewd
         => DONE
     -> get a specific user
+        => reviewd
+        => DONE
+    -> update username
+        => reviewd
+        => DONE
+    -> update email
+        => reviewd
+        => DONE
+    -> update password
+        => reviewd
+        => DONE
+    -> delete a specific user
         => reviewd
         => DONE
 */
