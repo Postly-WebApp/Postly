@@ -107,7 +107,7 @@ router.put("/:id", async (req, res) => {
     const token = req.cookies.jwt;
     console.log(token);
     if (!token) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: "unauthenticated" });
     }
     const comment = await Comment.findById(req.params.id);
     if (!comment) {
@@ -153,4 +153,5 @@ module.exports = router;
         => DONE
     -> update a specific comment
         => reviewd
+        => DONE
 */
