@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Post = require("../models/Post");
-
+const { body, validationResult } = require("express-validator");
 // create a new post
 router.post("/", async (req, res) => {
   const newPost = new Post(req.body);
@@ -84,6 +84,22 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
+// route to search for posts by matching description
+router.get("/search/:searchTerm", async (req, res) => {
+  try {
+    const posts = await Post.find({
+      desc: { $regex: req.params.searchTerm, $options: "i" },
+    });
+    // console.log(posts);
+    if (posts.length === 0) {
+      return res.status(404).json({ message: "No posts found" });
+    }
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
 module.exports = router;
 /*
   -------------------------------------      Reviewed and Done (FOR NOW)       -------------------------------------
@@ -97,5 +113,7 @@ module.exports = router;
     -> get all posts
         => DONE
     -> get all posts of a specific user
+        => DONE
+    -> search for posts
         => DONE
 */
