@@ -1,8 +1,13 @@
 const router = require("express").Router();
 const Comment = require("../models/Comment");
 const jwt = require("jsonwebtoken");
+const Joi = require("joi");
+const xss = require("xss");
 // route to add comment to a specific post by a specific user
-//const { validateComment, sanitizeComment } = require("./utils/validation");
+const {
+  commentSchema,
+  sanitizeComment,
+} = require("../utils/validations/comment");
 
 // create a new comment
 router.post("/", async (req, res) => {
@@ -29,9 +34,19 @@ router.post("/", async (req, res) => {
     //     error: "you only can add comments for you not someone else :)",
     //   });
     // }
-
+    const { error, validatedComment } = commentSchema.validate(req.body.text);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+    const sanitizedComment = sanitizeComment(validatedComment.text);
+    if (sanitizedComment.error) {
+      return res
+        .status(400)
+        .json({ error: sanitizedComment.error.details[0].message });
+    }
     const newComment = new Comment({
       ...req.body,
+      text: sanitizedComment,
       author: userID,
     });
     const savedComment = await newComment.save();

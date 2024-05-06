@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
-const registerSchema = require("../validations/register");
-const loginSchema = require("../validations/login");
+const registerSchema = require("../utils/validations/register");
+const loginSchema = require("../utils/validations/login");
 //const checkToken = require("./middlewares/checkTokens");
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
@@ -13,11 +13,11 @@ const createToken = (id) => {
   });
 };
 
-const adminToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: maxAge,
-  });
-};
+// const adminToken = (id) => {
+//   return jwt.sign({ id }, process.env.JWT_SECRET, {
+//     expiresIn: maxAge,
+//   });
+// };
 
 //REGISTER
 router.post("/register", async (req, res) => {
@@ -91,18 +91,22 @@ router.get("/verify", async (req, res) => {
   // actualToken = actualToken.split(";")[0];
   // //console.log(actualToken.split(";")[0]);
   if (!token) {
-    return res.status(401).json({ success: "False", userID: "" });
+    return res.status(401).json({ message: "Not Authenticated" });
   }
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    res.status(200).json({ success: "True", userID: verified.id });
+    res.status(200).json({ success: "True" });
   } catch (err) {
-    res.status(401).json({ success: "False", userID: "" });
+    res.status(400).json({ success: "False" });
   }
 });
 
 // route to logout the user
 router.get("/logout", (req, res) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.status(401).json({ message: "Not Authenticated" });
+  }
   res.clearCookie("jwt");
   res.status(200).json({ success: "true" });
 });

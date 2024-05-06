@@ -22,7 +22,8 @@
     "mongoose": "^8.3.2",
     "morgan": "^1.10.0",
     "sanitize-html": "^2.13.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "xss": "^1.0.15"
   },
   "devDependencies": {
     "eslint": "^9.2.0",

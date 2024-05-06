@@ -28,6 +28,10 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something went wrong" });
+});
 app.use(cookieParser());
 app.use(morgan("common"));
 // app.use(checkToken());
