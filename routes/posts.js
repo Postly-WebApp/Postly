@@ -1,10 +1,22 @@
 const router = require("express").Router();
 const Post = require("../models/Post");
+const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 // create a new post
 router.post("/", async (req, res) => {
-  const newPost = new Post(req.body);
   try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    const newPost = new Post({
+      userID: userId,
+      desc: req.body.desc,
+      img: req.body.img,
+    });
     const savePost = await newPost.save();
     res.status(200).json({
       success: true,
@@ -12,16 +24,30 @@ router.post("/", async (req, res) => {
       postID: savePost._id,
     });
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: "something went wrong" });
   }
 });
 
 // update a specific post
 router.put("/:id", async (req, res) => {
-  const post = await Post.findById(req.params.id);
   try {
-    if (req.body.userID === post.userID.toString()) {
-      await post.updateOne({ $set: req.body });
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: "Post Not Found" });
+    }
+    if (userID === post.userID.toString()) {
+      await post.updateOne({
+        $set: { desc: req.body.desc, img: req.body.img },
+      });
       res
         .status(200)
         .json({ success: "true", message: "Updated successfully" });
@@ -34,15 +60,27 @@ router.put("/:id", async (req, res) => {
       });
     }
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: "something went wrong" });
   }
 });
 
 // delete a specific post
 router.delete("/:id", async (req, res) => {
-  const post = await Post.findById(req.params.id);
   try {
-    if (req.body.userID === post.userID.toString()) {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: "Post Not Found" });
+    }
+    if (userID === post.userID.toString()) {
       await post.deleteOne();
       res
         .status(200)
@@ -54,6 +92,7 @@ router.delete("/:id", async (req, res) => {
       });
     }
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: "something went wrong" });
   }
 });
@@ -72,14 +111,23 @@ router.get("/", async (req, res) => {
 });
 
 //get all posts of a specific user
-router.get("/user/:id", async (req, res) => {
+router.get("/user", async (req, res) => {
   try {
-    const posts = await Post.find({ userID: req.params.id });
-    if (!posts) {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+
+    const posts = await Post.find({ userID: userID });
+    if (posts.length === 0) {
       return res.status(404).json({ message: "No posts found" });
     }
     res.status(200).json(posts);
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: "something went wrong" });
   }
 });
