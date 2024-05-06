@@ -52,7 +52,7 @@ router.get("/user", async (req, res) => {
   }
 });
 
-// Update email
+// Update email (ADMIN FUNCTIONALITY)
 router.put("/email/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -83,7 +83,45 @@ router.put("/email/:id", async (req, res) => {
   }
 });
 
-// Update username
+// Update email (USER FUNCTIONALITY)
+router.put("/user/email/", async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+    const user = await User.findById(userID);
+    // console.log(user._id);
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    // console.log(user.userID.toString());
+    // console.log(req.params.id);
+    if (user._id.toString() === userID) {
+      // Check if the new email already exists
+      const existingUser = await User.findOne({ email: req.body.email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+
+      await user.updateOne({ $set: { email: req.body.email } });
+      res
+        .status(200)
+        .json({ success: true, message: "Email updated successfully" });
+    } else {
+      res.status(403).json({
+        success: false,
+        message: "You can only update your own profile",
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
+// Update username (ADMIN FUNCTIONALITY)
 router.put("/username/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -111,7 +149,42 @@ router.put("/username/:id", async (req, res) => {
   }
 });
 
-// Update password
+// Update username (USER FUNCTIONALITY)
+router.put("/user/username/", async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+    const user = await User.findById(userID);
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    if (user._id.toString() === userID) {
+      // Check if the new username already exists
+      const existingUser = await User.findOne({ username: req.body.username });
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+
+      await user.updateOne({ $set: { username: req.body.username } });
+      res
+        .status(200)
+        .json({ success: true, message: "Username updated successfully" });
+    } else {
+      res.status(403).json({
+        success: false,
+        message: "You can only update your own profile",
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
+// Update password (ADMIN FUNCTIONALITY)
 router.put("/password/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -135,12 +208,74 @@ router.put("/password/:id", async (req, res) => {
   }
 });
 
-// route to delete a user by user id (ADMIN FUNCTIONALITY ONLY)
+// Update password (USER FUNCTIONALITY)
+router.put("/user/password/", async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+    const user = await User.findById(userID);
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    if (user._id.toString() === userID) {
+      // Update the password
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      await user.updateOne({ $set: { password: hashedPassword } });
+      res
+        .status(200)
+        .json({ success: true, message: "Password updated successfully" });
+    } else {
+      res.status(403).json({
+        success: false,
+        message: "You can only update your own profile",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
+// route to delete a user by user id (ADMIN FUNCTIONALITY)
 router.delete("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User Not Found" });
     if (user._id.toString() === req.params.id) {
+      await user.deleteOne();
+      res
+        .status(200)
+        .json({ success: "true", message: "Deleted successfully" });
+    } else {
+      res.status(403).json({
+        success: "false",
+        message: "you can only delete your own profile",
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
+// route to delete a user by user id (USER FUNCTIONALITY)
+router.delete("/user", async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+    const user = await User.findById(userID);
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+    if (user._id.toString() === userID) {
       await user.deleteOne();
       res
         .status(200)
