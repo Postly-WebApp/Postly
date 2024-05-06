@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 // route to get all users  (ADMIN FUNCTIONALITY ONLY)
 router.get("/", async (req, res) => {
   try {
@@ -30,14 +31,23 @@ router.post("/", async (req, res) => {
 });
 
 // route to get a user by user id
-router.get("/:id", async (req, res) => {
+router.get("/user", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+
+    const user = await User.findById(userID);
     if (!user) {
       return res.status(404).json({ message: "User Not Found" });
     }
     res.status(200).json({ username: user.username, email: user.email });
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: "something went wrong" });
   }
 });
