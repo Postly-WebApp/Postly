@@ -38,7 +38,23 @@ router.get("/user", async (req, res) => {
       return res.status(401).json({ error: "user not authenticated" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
     const userID = decoded.id;
 
     const user = await User.findById(userID);
@@ -91,7 +107,23 @@ router.put("/user/email/", async (req, res) => {
       return res.status(401).json({ error: "user not authenticated" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
     const userID = decoded.id;
     const user = await User.findById(userID);
     // console.log(user._id);
@@ -157,7 +189,23 @@ router.put("/user/username/", async (req, res) => {
       return res.status(401).json({ error: "user not authenticated" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
     const userID = decoded.id;
     const user = await User.findById(userID);
     if (!user) return res.status(404).json({ message: "User Not Found" });
@@ -216,7 +264,23 @@ router.put("/user/password/", async (req, res) => {
       return res.status(401).json({ error: "user not authenticated" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
     const userID = decoded.id;
     const user = await User.findById(userID);
     if (!user) return res.status(404).json({ message: "User Not Found" });
@@ -262,35 +326,35 @@ router.delete("/:id", async (req, res) => {
 });
 
 // route to delete a user by user id (USER FUNCTIONALITY)
-router.delete("/user", async (req, res) => {
-  try {
-    const token = req.cookies.jwt;
-    if (!token) {
-      return res.status(401).json({ error: "user not authenticated" });
-    }
+// router.delete("/user", async (req, res) => {
+//   try {
+//     const token = req.cookies.jwt;
+//     if (!token) {
+//       return res.status(401).json({ error: "user not authenticated" });
+//     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userID = decoded.id;
-    const user = await User.findById(userID);
-    if (!user) {
-      return res.status(404).json({ message: "User Not Found" });
-    }
-    if (user._id.toString() === userID) {
-      await user.deleteOne();
-      res
-        .status(200)
-        .json({ success: "true", message: "Deleted successfully" });
-    } else {
-      res.status(403).json({
-        success: "false",
-        message: "you can only delete your own profile",
-      });
-    }
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ message: "something went wrong" });
-  }
-});
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     const userID = decoded.id;
+//     const user = await User.findById(userID);
+//     if (!user) {
+//       return res.status(404).json({ message: "User Not Found" });
+//     }
+//     if (user._id.toString() === userID) {
+//       await user.deleteOne();
+//       res
+//         .status(200)
+//         .json({ success: "true", message: "Deleted successfully" });
+//     } else {
+//       res.status(403).json({
+//         success: "false",
+//         message: "you can only delete your own profile",
+//       });
+//     }
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).json({ message: "something went wrong" });
+//   }
+// });
 
 module.exports = router;
 /*
