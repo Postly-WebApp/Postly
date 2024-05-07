@@ -7,8 +7,32 @@ const cors = require("cors");
 const helmet = require("helmet");
 const dotenv = require("dotenv");
 dotenv.config();
-app.listen(5000, () => console.log(`listining in port 5000....`));
-mongoose.connect(process.env.MONGO_URL);
+app.listen(5000, () => console.log(`listening on port 5000....`));
+
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB", err);
+  });
+
+const connection = mongoose.connection;
+connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
+
+connection.on("disconnected", () => {
+  console.log("MongoDB disconnected");
+});
+process.on("SIGINT", () => {
+  connection.close(() => {
+    console.log("Mongoose connection disconnected through app termination");
+    process.exit(0);
+  });
+});
+
 const handler = require("./middlewares/errorHandler");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
