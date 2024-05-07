@@ -94,9 +94,26 @@ router.get("/verify", async (req, res) => {
     return res.status(401).json({ message: "Not Authenticated" });
   }
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
     res.status(200).json({ success: "True" });
   } catch (err) {
+    console.log(err.message);
     res.status(400).json({ success: "False" });
   }
 });
