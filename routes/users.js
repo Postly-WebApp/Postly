@@ -34,6 +34,7 @@ router.post("/", async (req, res) => {
 router.get("/user", async (req, res) => {
   try {
     const token = req.cookies.jwt;
+    console.log(token);
     if (!token) {
       return res.status(401).json({ error: "user not authenticated" });
     }
@@ -61,6 +62,7 @@ router.get("/user", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User Not Found" });
     }
+    console.log(user);
     res.status(200).json({ username: user.username, email: user.email });
   } catch (err) {
     console.log(err.message);
@@ -303,6 +305,52 @@ router.put("/user/password/", async (req, res) => {
   }
 });
 
+// Update Pic (USER FUNCTIONALITY)
+router.put("/user/Pic/", async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
+    const userID = decoded.id;
+    const user = await User.findById(userID);
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    if (user._id.toString() === userID) {
+      await user.updateOne({ $set: { profilePic: req.body.profilePic } });
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "profile picture updated successfully",
+        });
+    } else {
+      res.status(403).json({
+        success: false,
+        message: "You can only update your own profile",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
 // route to delete a user by user id (ADMIN FUNCTIONALITY)
 router.delete("/:id", async (req, res) => {
   try {
