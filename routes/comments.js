@@ -17,7 +17,23 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ error: "user not authenticated" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
     const userID = decoded.id;
 
     // Validate and sanitize the request body
@@ -97,7 +113,23 @@ router.delete("/:id", async (req, res) => {
     if (!comment) {
       return res.status(404).json({ message: "comment does not exist" });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
     const userID = decoded.id;
     if (comment.author.toString() === userID) {
       await comment.deleteOne();
@@ -128,7 +160,23 @@ router.put("/:id", async (req, res) => {
     if (!comment) {
       return res.status(404).json({ message: "comment does not exist" });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        if (err.message === "invalid signature") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt signature is required") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+        if (err.message === "jwt malformed") {
+          return res.status(401).json({ error: "Invalid JWT signature" });
+        }
+      }
+      throw err;
+    }
     const userID = decoded.id;
     if (comment.author.toString() !== userID) {
       return res.status(403).json({
