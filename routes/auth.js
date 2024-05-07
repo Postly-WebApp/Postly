@@ -74,8 +74,8 @@ router.post("/login", async (req, res) => {
     const token = createToken(user.id);
 
     const cookie = res.cookie("jwt", token, {
-      httpOnly: true,
       maxAge: maxAge * 1000,
+      path: "/",
     });
 
     res.status(200).json({ success: "true", userID: user._id });
@@ -120,10 +120,6 @@ router.get("/verify", async (req, res) => {
 
 // route to logout the user
 router.get("/logout", (req, res) => {
-  const token = req.cookies.jwt;
-  if (!token) {
-    return res.status(401).json({ message: "Not Authenticated" });
-  }
   res.clearCookie("jwt");
   res.status(200).json({ success: "true" });
 });
