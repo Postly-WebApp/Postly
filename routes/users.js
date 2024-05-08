@@ -31,6 +31,24 @@ router.post("/", async (req, res) => {
 });
 
 // route to get a user by user id
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "this User Does Not Exist" });
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
+// route to get current user
 router.get("/user", async (req, res) => {
   try {
     const token = req.cookies.jwt;
@@ -335,12 +353,10 @@ router.put("/user/Pic/", async (req, res) => {
     if (!user) return res.status(404).json({ message: "User Not Found" });
     if (user._id.toString() === userID) {
       await user.updateOne({ $set: { profilePic: req.body.profilePic } });
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "profile picture updated successfully",
-        });
+      res.status(200).json({
+        success: true,
+        message: "profile picture updated successfully",
+      });
     } else {
       res.status(403).json({
         success: false,
