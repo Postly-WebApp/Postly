@@ -50,19 +50,19 @@ router.post("/", async (req, res) => {
     //     error: "you only can add comments for you not someone else :)",
     //   });
     // }
-    const { error, validatedComment } = commentSchema.validate(req.body.text);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
-    const sanitizedComment = sanitizeComment(validatedComment.text);
-    if (sanitizedComment.error) {
-      return res
-        .status(400)
-        .json({ error: sanitizedComment.error.details[0].message });
-    }
+    // const { error, validatedComment } = commentSchema.validate(req.body.text);
+    // if (error) {
+    //   return res.status(400).json({ error: error.details[0].message });
+    // }
+    //const sanitizedComment = sanitizeComment(validatedComment.text);
+    // if (sanitizedComment.error) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: sanitizedComment.error.details[0].message });
+    // }
     const newComment = new Comment({
       ...req.body,
-      text: sanitizedComment,
+      text: req.body.text,
       author: userID,
     });
     const savedComment = await newComment.save();
