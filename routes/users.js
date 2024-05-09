@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 // route to get all users  (ADMIN FUNCTIONALITY ONLY)
 router.get("/", async (req, res) => {
+  //console.log("HERE");
   try {
     const users = await User.find().select("_id username email");
     if (!users) {
@@ -15,41 +16,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-// route to create a new user (ADMIN FUNCTIONALITY ONLY)
-router.post("/", async (req, res) => {
-  const newUser = new User(req.body);
-  try {
-    const savedUser = await newUser.save();
-    res.status(200).json({
-      success: "true",
-      message: "User Created successfully",
-      userID: savedUser._id,
-    });
-  } catch (err) {
-    res.status(500).json({ message: "something went wrong" });
-  }
-});
-
-// route to get a user by user id
-router.get("/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "User Not Found" });
-    }
-    res.status(200).json({
-      username: user.username,
-      email: user.email,
-      profilePic: user.profilePic,
-    });
-  } catch (err) {
-    res.status(500).json({ message: "this User Does Not Exist" });
-    res.status(500).json({ message: "something went wrong" });
-  }
-});
-
 // route to get current user
 router.get("/user", async (req, res) => {
+  //console.log("in");
   try {
     const token = req.cookies.jwt;
     console.log(token);
@@ -80,16 +49,54 @@ router.get("/user", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User Not Found" });
     }
-    console.log(user);
-    res.status(200).json({ username: user.username, email: user.email });
+    // console.log(user);
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "something went wrong" });
   }
 });
-
+// route to create a new user (ADMIN FUNCTIONALITY ONLY)
+router.post("/", async (req, res) => {
+  //console.log("HERE2");
+  const newUser = new User(req.body);
+  try {
+    const savedUser = await newUser.save();
+    res.status(200).json({
+      success: "true",
+      message: "User Created successfully",
+      userID: savedUser._id,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+// route to get a user by user id
+router.get("/:id", async (req, res) => {
+  // console.log("HERE3");
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (err) {
+    console.log(err.message);
+    //res.status(500).json({ message: "this User Does Not Exist" });
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
 // Update email (ADMIN FUNCTIONALITY)
 router.put("/email/:id", async (req, res) => {
+  //console.log("HERE9");
   try {
     const user = await User.findById(req.params.id);
     // console.log(user._id);
@@ -121,6 +128,7 @@ router.put("/email/:id", async (req, res) => {
 
 // Update email (USER FUNCTIONALITY)
 router.put("/user/email/", async (req, res) => {
+  //console.log("HERE10");
   try {
     const token = req.cookies.jwt;
     if (!token) {
