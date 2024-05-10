@@ -2,6 +2,8 @@ const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 // route to get all users  (ADMIN FUNCTIONALITY ONLY)
 router.get("/", async (req, res) => {
   //console.log("HERE");
@@ -21,7 +23,7 @@ router.get("/user", async (req, res) => {
   //console.log("in");
   try {
     const token = req.cookies.jwt;
-    console.log(token);
+    //console.log(token);
     if (!token) {
       return res.status(401).json({ error: "user not authenticated" });
     }
@@ -381,6 +383,10 @@ router.delete("/:id", async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User Not Found" });
     if (user._id.toString() === req.params.id) {
+      // Remove all posts and comments associated with the user
+      await Post.deleteMany({ userID: user._id });
+      await Comment.deleteMany({ author: user._id });
+
       await user.deleteOne();
       res
         .status(200)
