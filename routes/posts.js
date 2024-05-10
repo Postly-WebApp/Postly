@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const Post = require("../models/Post");
 const jwt = require("jsonwebtoken");
-const { body, validationResult } = require("express-validator");
+const { validatePostData } = require("../middlewares/validatePost");
 // create a new post
-router.post("/", async (req, res) => {
+router.post("/", validatePostData, async (req, res) => {
   try {
     const token = req.cookies.jwt;
     if (!token) {
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
 });
 
 // update a specific post
-router.put("/:id", async (req, res) => {
+router.put("/:id", validatePostData, async (req, res) => {
   try {
     const token = req.cookies.jwt;
     if (!token) {

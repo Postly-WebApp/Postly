@@ -53,10 +53,10 @@ app.use(
     credentials: true,
   })
 );
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong" });
-});
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ error: "Something went wrong" });
+// });
 app.use(cookieParser());
 app.use(morgan("common"));
 // app.use(checkToken());
@@ -64,3 +64,8 @@ app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/comments", commentRoute);
+
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ error: err });
+// });

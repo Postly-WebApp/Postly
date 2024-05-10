@@ -1,16 +1,11 @@
 const router = require("express").Router();
 const Comment = require("../models/Comment");
 const jwt = require("jsonwebtoken");
-const Joi = require("joi");
-const xss = require("xss");
+const { validateCommentData } = require("../middlewares/validateComment");
 // route to add comment to a specific post by a specific user
-const {
-  commentSchema,
-  sanitizeComment,
-} = require("../utils/validations/comment");
 
 // create a new comment
-router.post("/", async (req, res) => {
+router.post("/", validateCommentData, async (req, res) => {
   try {
     const token = req.cookies.jwt;
     if (!token) {
@@ -35,31 +30,6 @@ router.post("/", async (req, res) => {
       throw err;
     }
     const userID = decoded.id;
-
-    // Validate and sanitize the request body
-    // const { error, sanitizedComment } = validateComment(req.body);
-    // if (error) {
-    //   return res.status(400).json({ error: error.details[0].message });
-    // }
-
-    // Check if the userID matches the decoded token
-    // if (req.body.author !== userID) {
-    //   console.log(userID);
-    //   console.log(req.body.author);
-    //   return res.status(403).json({
-    //     error: "you only can add comments for you not someone else :)",
-    //   });
-    // }
-    // const { error, validatedComment } = commentSchema.validate(req.body.text);
-    // if (error) {
-    //   return res.status(400).json({ error: error.details[0].message });
-    // }
-    //const sanitizedComment = sanitizeComment(validatedComment.text);
-    // if (sanitizedComment.error) {
-    //   return res
-    //     .status(400)
-    //     .json({ error: sanitizedComment.error.details[0].message });
-    // }
     const newComment = new Comment({
       ...req.body,
       text: req.body.text,
@@ -149,7 +119,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // route to update a specific comment
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateCommentData, async (req, res) => {
   try {
     const token = req.cookies.jwt;
     console.log(token);

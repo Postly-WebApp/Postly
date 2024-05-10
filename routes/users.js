@@ -377,6 +377,36 @@ router.put("/user/Pic/", async (req, res) => {
     res.status(500).json({ message: "something went wrong" });
   }
 });
+// route to delete a user by user id (USER FUNCTIONALITY)
+router.delete("/user", async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id;
+    const user = await User.findById(userID);
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+    if (user._id.toString() === userID) {
+      await user.deleteOne();
+      res
+        .status(200)
+        .json({ success: "true", message: "Deleted successfully" });
+    } else {
+      res.status(403).json({
+        success: "false",
+        message: "you can only delete your own profile",
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
 // route to delete a user by user id (ADMIN FUNCTIONALITY)
 router.delete("/:id", async (req, res) => {
   try {
@@ -402,37 +432,6 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "something went wrong" });
   }
 });
-
-// route to delete a user by user id (USER FUNCTIONALITY)
-// router.delete("/user", async (req, res) => {
-//   try {
-//     const token = req.cookies.jwt;
-//     if (!token) {
-//       return res.status(401).json({ error: "user not authenticated" });
-//     }
-
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     const userID = decoded.id;
-//     const user = await User.findById(userID);
-//     if (!user) {
-//       return res.status(404).json({ message: "User Not Found" });
-//     }
-//     if (user._id.toString() === userID) {
-//       await user.deleteOne();
-//       res
-//         .status(200)
-//         .json({ success: "true", message: "Deleted successfully" });
-//     } else {
-//       res.status(403).json({
-//         success: "false",
-//         message: "you can only delete your own profile",
-//       });
-//     }
-//   } catch (err) {
-//     console.log(err.message);
-//     res.status(500).json({ message: "something went wrong" });
-//   }
-// });
 
 module.exports = router;
 /*
