@@ -5,7 +5,7 @@ const { validateCommentData } = require("../middlewares/validateComment");
 // route to add comment to a specific post by a specific user
 
 // create a new comment
-router.post("/", validateCommentData, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const token = req.cookies.jwt;
     if (!token) {
