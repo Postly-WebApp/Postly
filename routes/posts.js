@@ -148,6 +148,10 @@ router.delete("/:id", async (req, res) => {
 // get all posts
 router.get("/", async (req, res) => {
   try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ error: "user not authenticated" });
+    }
     const posts = await Post.find();
     if (!posts) {
       return res.status(404).json({ message: "No posts found" });

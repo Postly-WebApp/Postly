@@ -65,7 +65,5 @@ app.use("/api/posts", postRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/comments", commentRoute);
 
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).json({ error: err });
-// });
+// error handling middleware
+app.use(handler);

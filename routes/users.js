@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
-// route to get all users  (ADMIN FUNCTIONALITY ONLY)
+// route to get all users
 router.get("/", async (req, res) => {
   //console.log("HERE");
   try {
