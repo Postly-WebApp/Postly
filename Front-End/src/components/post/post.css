@@ -1,0 +1,110 @@
+.post {
+  width: 100%;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  margin: 30px 0;
+}
+
+.postWrapper {
+  padding: 10px;
+}
+
+.postTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.postTopLeft {
+  display: flex;
+  align-items: center;
+}
+
+.postProfileImg {
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.postUsername {
+  color: black;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 10px;
+  font-family: sans-serif;
+}
+.postPic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.postDate {
+  color: slategray;
+  display: flex;
+  padding-left: 10px;
+  font-size: 12px;
+}
+
+.postCenter {
+  margin: 20px 0;
+}
+
+.postImg {
+  margin-top: 20px;
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.postBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.postBottomLeft {
+  display: flex;
+  align-items: center;
+}
+
+.likeIcon {
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.postLikeCounter {
+  font-size: 15px;
+}
+
+.postCommentText {
+  cursor: pointer;
+  font-family: sans-serif;
+  border-bottom: 1px gray;
+  font-size: 17px;
+}
+/* Style for the share button */
+.postShareButton {
+  margin-left: 10px; /* Space between the share button and the comment text */
+  background-color: #673ab7; /* Background color for the button */
+  color: white; /* Text color for the button */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 5px 10px; /* Padding around the button text */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.postShareButton:hover {
+  background-color: #5e35b1; /* Darker background color on hover */
+}
+
+.postText {
+  color: black;
+  font-size: 17px;
+  font-family: sans-serif;
+}

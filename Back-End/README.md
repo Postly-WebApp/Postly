@@ -1,36 +1,21 @@
 # Postly
 
 - Back-End Devs :
-
   - Zyad Mohamed Mohamed Elsawy
   - Abdelrahman Ahmed Fawzy
 
-- Front-End Devs :
-  - Tarek Elgendy
-  - Mohamed Nashaat
-  - Kholoud Mohamed
-  - Rana Essam
-
 # How to install
 
-- Clone this repo
-- Navigate to the cloned repo and open a termenal window in either the Front-End or Back-End folder
-- the installation steps is the same for the front-end and back-end
+- Clone this branch
+- Navigate to the cloned branch and open the terminal
 - Run `npm install` to install all the dependencies
 
 # How to use
 
-## Front-End
-
 - Run `npm start` to start the server
-- The Front-End Server is Now Live on `http://localhost:3000`
+- The API is Now Live on `http://localhost:5000`
 
-## Back-End
-
-- Run `npm start` to start the server
-- The Back-End Server is Now Live on `http://localhost:5000`
-
-# API Documentation For the Back-End
+# API Documentation
 
 ## Authentication
 

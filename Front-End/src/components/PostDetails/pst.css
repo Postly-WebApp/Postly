@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+ 
+
+}
+
+.card {
+  width: 100%;
+  max-width: 800px;
+}
+
+.card-header, .card-footer {
+  background-color: #f8f9fa;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.card-title {
+  font-size: 2rem;
+}
+
+.card-img-top {
+  width: 100%;
+  height: auto;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.list-group {
+  margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    height: auto;
+  }
+}
