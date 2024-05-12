@@ -1,0 +1,168 @@
+.homeContainer {
+  display: flex;
+  width: 100%;
+}
+.userProfile .cover-photos {
+  height: 300px;
+  background-repeat: no-repeat;
+  width: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.cont {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.userProfile {
+  background-color: rgb(255, 255, 255);
+
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.userProfile:hover {
+  transform: scale(1.05);
+}
+
+.userProfile {
+  margin-left: 60px;
+  margin-right: 60px;
+}
+.profile-info {
+  text-align: center;
+  margin-top: 10px;
+  border-radius: 15px;
+}
+
+/* Profile picture */
+.profile-info img {
+  width: 100px; /* Width of the profile picture */
+  height: 100px; /* Height of the profile picture */
+  border-radius: 50%; /* Make profile picture circular */
+  border: 3px solid white; /* White border */
+  margin-bottom: 10px;
+}
+
+/* User name container */
+.user-name h3,
+.user-name h5 {
+  margin: 5px 0;
+  color: #333; /* Dark gray color */
+}
+
+/* Button container */
+.profile-button {
+  margin: 10px 0;
+}
+
+.editInfo {
+  padding: 30%; /* Padding for the button */
+  background-color: #673ab7; /* Blue background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Button hover effect */
+.editInfo:hover {
+  background-color: #3d216d; /* Darker blue on hover */
+}
+
+/* Edit section */
+.profile-button > div {
+  margin: 10px 0;
+}
+
+/* Edit input fields */
+.profile-button input {
+  padding: 8px;
+  margin: 5px 0;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.profile-button button {
+  padding: 8px 12px;
+  background-color: #673ab7;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+/* Save button hover effect */
+.profile-button button:hover {
+  background-color: #3d216d;
+}
+
+/* Additional paragraph styling */
+.pio {
+  color: #666;
+  font-size: 14px;
+  margin-top: 10px;
+}
+/* Container for editing profile image */
+.edit-profile-image {
+  margin-bottom: 10px;
+}
+
+/* Style for the change profile image button */
+.edit-profile-image-button {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #673ab7; /* Blue background */
+  color: white;
+  border-radius: 30px;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  margin-bottom: 10px;
+}
+
+/* Change profile image button hover effect */
+.edit-profile-image-button:hover {
+  background-color: #3d216d; /* Darker blue on hover */
+}
+.cover-photos {
+  width: 100%; /* Make sure the cover photo spans the entire width */
+  height: 100%; /* Make sure the cover photo spans the entire height */
+  overflow: hidden; /* Hide any overflow content */
+}
+
+.cover-photos img {
+  width: 100%;
+  height: auto;
+}
+/* Button to edit cover photo */
+.edit-cover-photo-button {
+  position: absolute; /* Position the button absolutely */
+  left: 10px; /* 10px from the left */
+  padding: 8px 12px;
+  background-color: #673ab7; /* Purple background */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+  margin-top: 300px;
+  margin-left: 500px;
+}
+.postmap {
+  width: 50%;
+  margin: 0 auto; /* Center horizontally */
+}
+.userName {
+  color: #000000; /* Blue background */
+  /*  font-style:;*/
+  font-size: 27px;
+}
+.user-name {
+  text-align: center;
+  font-family: sans-serif;
+}

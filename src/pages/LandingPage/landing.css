@@ -1,0 +1,55 @@
+.landing {
+  display: flex;
+  flex-wrap: wrap;
+}
+.landing .left-column .logo {
+  width: 200px;
+  padding-left: 60px;
+}
+.left-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.right-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.mydescription {
+  font-size: large;
+  font-style: oblique;
+  font-weight: bold;
+}
+.logo img,
+.image2 img {
+  max-width: 100%;
+  height: auto;
+}
+
+.intro-text {
+  text-align: center;
+}
+
+.signbutton {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 20px auto;
+  padding: 10px 20px;
+  border-radius: 30px;
+  background-color: #4c00b4;
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+  border: 1px solid #4c00b4;
+}
+
+.signbutton:hover {
+  background-color: #340478;
+}

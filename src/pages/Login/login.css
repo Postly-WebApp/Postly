@@ -81,22 +81,23 @@
   cursor: pointer;
 }
 
-
+/* Gray background for cancel button */
 .gray {
   background: #eaeaea;
   color: #676767;
 }
 
-
+/* Error message */
 .error {
   color: #ff0000;
   font-size: 14px;
   margin-left: 10px;
 }
 
+/* Media queries for responsiveness */
 @media (max-width: 600px) {
   .container {
-      width: 100%; 
+      width: 100%; /* Full width on smaller screens */
       margin-top: 50px;
   }
   .inputs {
@@ -105,14 +106,14 @@
   .submit-container {
       margin-top: 30px;
   }
-
+  /* Adjust button width */
   .submit,
   .cancel {
-      width: 100%; 
-      max-width: none; 
+      width: 100%; /* Full width on smaller screens */
+      max-width: none; /* Remove maximum width */
   }
   .input {
-      width: 100%; 
-      max-width: none; 
+      width: 100%; /* Full width */
+      max-width: none; /* Remove maximum width */
   }
 }
